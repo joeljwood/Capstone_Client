@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+div {
+  padding-top: 10px;
+}
+
+div.notification{
+  height: 200;
+  width: 300;
+  margin: auto;
+  text-align: justify;
+  padding: 10px;
+  background-color: lightblue;
+}
