@@ -1,19 +1,35 @@
 
 import './App.css';
-import react , {useEffect,useState} from 'react'
-import * as Constants from './constants'
+import React , {useEffect,useState} from 'react'
 import axios from 'axios'
 import Robot from './components/Robot'
 import Question from './components/Question'
-
+import { BrowserRouter , Route , Redirect ,Switch } from 'react-router-dom'
+import User from './components/User'
+import Review from './components/Review'
+import Users from './components/Users'
+import MainNavigation from './components/MainNavigation'
 
 function App() {
 
   return (
     <div className="App">
-   
+   <BrowserRouter>
+    <React.Fragment>
+       <MainNavigation />
+   <main className="main-content">
+     <Switch>
+       <Redirect from="/" to="/user" exact/>
+       <Route path="/question" component={Question}/>
+       <Route path="/robot" component={Robot}/>
+       <Route path="/user" component={User}/>
+       <Route path="/review" component={Review}/>
+     </Switch>
+     </main>
+     </React.Fragment>
+   </BrowserRouter>
  
-  <Question />
+ 
 </div>
   );
 }

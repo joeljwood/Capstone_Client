@@ -1,21 +1,26 @@
 //import react from 'react'
-import { GET_ROBOTS_QUERY } from '../constants'
-import react , {useEffect,useState} from 'react'
+import react, {useEffect,useState} from 'react'
 import * as Constants from '../constantsquestion'
 import axios from 'axios'
 import "../assets/style.css";
+import Review from './Review';
 function Question (props) {
-
-     const [data,setData] = useState( { questions : [] } );
-
+    
+     const [data,setData] = useState( { questions : []} );
      const [currentquestion,setcurrentquestion] =useState(0);
+     const numberOfQuestions = data.questions.length -1;
+     const [answer, setAnswer] = useState([""]);
+     const score = 0;
+
      const next =() =>{
-      if(currentquestion < data.questions.length -1 ){
+      console.log({answer});
+      if(currentquestion < numberOfQuestions ){
      const nextquestion=currentquestion +1;
      setcurrentquestion(nextquestion);
       }
       else{
         setcurrentquestion(currentquestion);
+
       }
      };
      const previous =() =>{
@@ -42,6 +47,53 @@ function Question (props) {
       };
     fetchData();
     },[] )
+
+    function answersYes(){
+      console.log(data.questions[currentquestion].id);
+      
+      if(answer.length === data.questions[currentquestion].id){
+        console.log("here");
+        setAnswer(answer => [...answer, 
+          "yes"]);
+        }
+      else{
+        console.log("here");
+        answer[data.questions[currentquestion].id] = "yes";
+      }
+      
+      /*if(answer.length === data.questions[currentquestion].id){
+        setAnswer([answer.slice(data.questions[currentquestion].id,1,"yes")]);
+      }*/
+      
+      //set answer array to contain current question
+      
+      //call method that changes data answered question to yes
+      //axios.post(
+      //  Constants.GRAPHQL_API, {
+      //    MutationEvent:Constants.SET_ANSWER_MUTILATION
+      //}
+      //);
+      };
+
+    function answersNo(){
+      
+      //call method that changes data answered question to no
+      console.log(data.questions[currentquestion].id);
+      if(answer.length === data.questions[currentquestion].id){
+        setAnswer(answer => [...answer, 
+          "no"]);
+      }else{
+        console.log("here");
+        answer[data.questions[currentquestion].id] = "no";
+      }
+
+      console.log({answer});
+      //const yes= await.axios.post(
+      //  Constants.GRAPHQL_API, {
+      //    mutilation:Constants.SET_ANSWER_MUTILATION
+      //}
+      //);
+      };
  
     return(
         <div className="container">
@@ -52,21 +104,25 @@ function Question (props) {
      <ul>
    
    {
-    data && data.questions.length > 0 &&
+    data && data.questions.length > 0 && 
     <ol>
  
       <div className='question_text'>{data.questions[currentquestion].question}</div>
        <div className='answer_section'>
-           <button className='questionBox'>Yes</button>
-           <button  className='questionBox'>No</button>
+           <button onClick={answersYes} className='questionBox'>Yes</button>
+           <button onClick={answersNo} className='questionBox'>No</button>
+           <p>You answered {answer[data.questions[currentquestion].id]}</p>
        </div>
        <div>
        <button onClick={() => previous()}>previous question</button>
-         <button onClick={() => next()}>Next question</button>
-         
+       <button onClick={() => next()}>Next question</button>
+       {data.questions[currentquestion].id === 8?(
+         <Route path="/review" component={Review}/>
+       ): null}
        </div>
    
       </ol>
+    
   }
     
     
@@ -79,7 +135,5 @@ function Question (props) {
         
     );
 }
-
-const question_01 = ({data: {}})
 
 export default Question;

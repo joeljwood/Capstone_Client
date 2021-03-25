@@ -1,8 +1,7 @@
 //import react from 'react'
-import { GET_ROBOTS_QUERY } from '../constants'
 import react , {useEffect,useState} from 'react'
-import * as Constants from '../constants'
 import axios from 'axios'
+import * as Constants from '../constantsquestion'
 
 function Robot (props) {
 
@@ -30,7 +29,7 @@ function Robot (props) {
 
        <div>
       <div>
-       <h1>List of video</h1>
+       <h1>List of robots</h1>
      {console.log("data: ", data)}
      <ul>
      {data && data.robots.map(item => (
