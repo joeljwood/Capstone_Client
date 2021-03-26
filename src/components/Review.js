@@ -1,7 +1,7 @@
 import React from "react";
 import "../assets/style.css"
 
-const ReviewPage = () => {
+function ReviewPage() {
     return(
         <p>Review</p>
     );
