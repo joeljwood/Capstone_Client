@@ -14,7 +14,7 @@ function Question (props) {
      const a6 =useRef(null);
      const a7 =useRef(null);
      const [data,setData] = useState( { questions : []} );
-     const [fromData,setFormData] = useState({});
+     const [radio, setRadio] = useState('');
      //const [answer, setAnswer] = useState([""]);
      //const score = 0;
 
@@ -36,37 +36,50 @@ function Question (props) {
 
     let formElements =[{
       labelid: 0,
-      key: 'answer1',
+      name: 'answer1',
+      value: '',
       reference: a1
     },{
       labelid: 1,
-      key: 'answer2',
+      name: 'answer2',
+      key:false,
       reference: a2
-    },{
-      labelid: 2,
-      key: 'answer3',
-      reference: a3
-    },
-    {
-      labelid: 3,
-      key: 'answer4',
-      reference: a4
-    },
-    {
-      labelid: 4,
-      key: 'answer5',
-      reference: a5
-    },
-    {
-      labelid: 5,
-      key: 'answer6',
-      reference: a6
-    },
-    {
-      labelid: 6,
-      key: 'answer7',
-      reference: a7
-    },]
+    }]
+    
+    function submitQuestions(){
+      console.log(a1.current.value)
+      const answer1= a1.current.value;
+      /*const answer2= a2.current.value;
+      const answer3= a3.current.value;
+      const answer4= a4.current.value;
+      const answer5= a5.current.value;
+      const answer6= a6.current.value;
+      const answer7= a7.current.value;*/
+
+      
+      const fetchData = async () => {
+        const queryResult= await axios.post(
+          Constants.GRAPHQL_API, {
+            query: `
+            mutation{
+              newAnswer(questionId: 1, userId: 1, robotId: 2, answers: "${answer1}"){
+                answers
+              }
+            }
+            `
+          }
+        );
+        const answerresult=queryResult.data.data;
+        console.log("result ", answerresult)
+    }
+    fetchData();
+    }
+    function selectYes(){
+      return("yes");
+    }
+    function selectNo(){
+      return("no");
+    }
  
     return(
         <div className="container">
@@ -88,13 +101,16 @@ function Question (props) {
                 return <div>
                   {data.questions[formElement.labelid].question}<br/>
                   <label>Yes:
-                  <input type="radio" id="true" name="isTrue" value={true} ref={formElement.reference}/>
+                  <input type="radio" id={formElement.name} name={formElement.name} value={selectYes()} ref={formElement.reference}/>
                   </label>
                   <label>No:
-                  <input type="radio" id="false" name="isFalse" value={false} ref={formElement.reference}/>
+                  <input type="radio" id={formElement.name} name={formElement.name} value={selectNo()} ref={formElement.reference}/>
                   </label>
                   </div>
               })}
+          </div>
+          <div className="form-actions">
+          <button type="button"  onClick={() => submitQuestions()} >Submit</button>
           </div>
         </form>
        
