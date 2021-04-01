@@ -4,6 +4,9 @@ import * as Constants from '../constantsquestion'
 import axios from 'axios'
 import "../assets/UserForm.css";
 import React from 'react';
+import {NavLink} from 'react-router-dom'
+//import Question from './Question'
+//import { BrowserRouter , Route , Redirect ,Switch } from 'react-router-dom'
 
 
 function User (props) {
@@ -47,9 +50,12 @@ function User (props) {
        
       );
       const userresult=queryResult.data.data;
+      //pass this id through props maybe?
      console.log("result: ", userresult);
+     
     }
     fetchData();
+    window.location.href = "/question"
    }
  
     return(
@@ -87,7 +93,6 @@ function User (props) {
        <button type="button"  onClick={() => submitHandler()} >Submit</button>
        </div>
        </form>
-        
     );
 }
 

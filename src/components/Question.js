@@ -37,7 +37,7 @@ function Question (props) {
     let formElements =[{
       labelid: 0,
       name: 'answer1',
-      value: '',
+      value: radio,
       reference: a1
     },{
       labelid: 1,
@@ -74,12 +74,6 @@ function Question (props) {
     }
     fetchData();
     }
-    function selectYes(){
-      return("yes");
-    }
-    function selectNo(){
-      return("no");
-    }
  
     return(
         <div className="container">
@@ -101,10 +95,10 @@ function Question (props) {
                 return <div>
                   {data.questions[formElement.labelid].question}<br/>
                   <label>Yes:
-                  <input type="radio" id={formElement.name} name={formElement.name} value={selectYes()} ref={formElement.reference}/>
+                  <input type="radio" id={formElement.name} name={formElement.name} onChange={e => setRadio("yes")} value= {radio} ref={formElement.reference}/>
                   </label>
                   <label>No:
-                  <input type="radio" id={formElement.name} name={formElement.name} value={selectNo()} ref={formElement.reference}/>
+                  <input type="radio" id={formElement.name} name={formElement.name} onChange={e => setRadio("no")} value={radio} ref={formElement.reference}/>
                   </label>
                   </div>
               })}
