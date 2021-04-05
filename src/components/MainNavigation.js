@@ -10,7 +10,6 @@ const mainNavigation = props => (
           <ul>
               <li><NavLink to="/user"> User</NavLink></li>
               <li><NavLink to="/question"> Question</NavLink></li>
-              <li><NavLink to="/review">Review</NavLink></li>
               <li><NavLink to="/robot"> Robot</NavLink></li>
           </ul>
          </nav>
@@ -18,3 +17,5 @@ const mainNavigation = props => (
 )
 
 export default mainNavigation;
+
+//<li><NavLink to="/review">Review</NavLink></li>

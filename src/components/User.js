@@ -1,13 +1,10 @@
-//import react from 'react'
+
 import react , {useRef,useEffect,useState} from 'react'
 import * as Constants from '../constantsquestion'
 import axios from 'axios'
 import "../assets/UserForm.css";
 import React from 'react';
-import {NavLink} from 'react-router-dom'
-//import Question from './Question'
-//import { BrowserRouter , Route , Redirect ,Switch } from 'react-router-dom'
-
+//import {NavLink} from 'react-router-dom'
 
 function User (props) {
    
@@ -55,7 +52,7 @@ function User (props) {
      
     }
     fetchData();
-    window.location.href = "/question"
+    window.location.href = "/question?";
    }
  
     return(

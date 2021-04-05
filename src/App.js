@@ -6,7 +6,7 @@ import Robot from './components/Robot'
 import Question from './components/Question'
 import { BrowserRouter , Route , Redirect ,Switch } from 'react-router-dom'
 import User from './components/User'
-import Review from './components/Review'
+//import Review from './components/Review'
 import Users from './components/Users'
 import MainNavigation from './components/MainNavigation'
 
@@ -23,7 +23,6 @@ function App() {
        <Route path="/question" component={Question}/>
        <Route path="/robot" component={Robot}/>
        <Route path="/user" component={User}/>
-       <Route path="/review" component={Review}/>
      </Switch>
      </main>
      </React.Fragment>
@@ -35,3 +34,5 @@ function App() {
 }
 
 export default App;
+
+//<Route path="/review" component={Review}/> 

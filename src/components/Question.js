@@ -5,7 +5,12 @@ import axios from 'axios'
 import "../assets/style.css";
 
 function Question (props) {
-    
+     //const search = props.location.search;
+     //const params = new URLSearchParams(search);
+     //const userid = params.get('id');
+     //console.log(userid);
+
+    //create references for each answer to pass into the submit questions function
      const a1 =useRef(null);
      const a2 =useRef(null);
      const a3 =useRef(null);
@@ -13,6 +18,9 @@ function Question (props) {
      const a5 =useRef(null);
      const a6 =useRef(null);
      const a7 =useRef(null);
+     //set use state for the questions and the radio buttons
+     const [page, setPage] = useState(true);
+     const [review, setReview] = useState(false);
      const [data,setData] = useState( { questions : []} );
      const [radio1, setRadio1] = useState('');
      const [radio2, setRadio2] = useState('');
@@ -21,10 +29,9 @@ function Question (props) {
      const [radio5, setRadio5] = useState('');
      const [radio6, setRadio6] = useState('');
      const [radio7, setRadio7] = useState('');
+     const [message, setMessage] = useState('');
 
-     //const [answer, setAnswer] = useState([""]);
-     //const score = 0;
-
+    //calls graphql on load and gets questions from the database
     useEffect(() => {
       const fetchData = async () => {
    //call graphql api
@@ -35,13 +42,13 @@ function Question (props) {
    );
      //update the component state
      const result=queryResult.data.data;
-     console.log("result: ", result);
     setData({ questions: result.allQuestions })
       };
     fetchData();
     },[] )
     
-    function submitQuestions(){
+    //submits answers to questions into the database
+    function submitAnswers(){
       console.log(a1.current.value)
       const answer1= a1.current.value;
       const answer2= a2.current.value;
@@ -51,7 +58,6 @@ function Question (props) {
       const answer6= a6.current.value;
       const answer7= a7.current.value;
 
-      
       const fetchData = async () => {
         const queryResultq1= await axios.post(
           Constants.GRAPHQL_API, {
@@ -138,15 +144,116 @@ function Question (props) {
         const answerresult5=queryResultq5.data.data;
         const answerresult6=queryResultq6.data.data;
         const answerresult7=queryResultq7.data.data;
-        console.log("result ", answerresult1, answerresult2, answerresult3, answerresult4, answerresult5, answerresult6, answerresult7);
+        console.log("Answers ", answerresult1, answerresult2, answerresult3, answerresult4, answerresult5, answerresult6, answerresult7);
     }
+    setPage(false);
+    setReview(true);
+    Review();
     fetchData();
+    //window.location.href = "/review";
+  }
+
+function Review() {
+
+  
+    var allQuestions = 0;
+    var noAnswers = 0;
+
+      const answer1= a1.current.value;
+      const answer2= a2.current.value;
+      const answer3= a3.current.value;
+      const answer4= a4.current.value;
+      const answer5= a5.current.value;
+      const answer6= a6.current.value;
+      const answer7= a7.current.value;
+
+    switch (answer1) {
+        case 'yes':
+            allQuestions++;
+            break;
+        case 'no':
+            noAnswers++;
+            allQuestions++;
+            break;
+            
     }
+    switch (answer2) {
+        case 'yes':
+            allQuestions++;
+            break;
+        case 'no':
+            noAnswers++;
+            allQuestions++;
+            break;
+    }
+    switch (answer3) {
+        case 'yes':
+            allQuestions++;
+            break;
+        case 'no':
+            noAnswers++;
+            allQuestions++;
+            break;
+    }
+    switch (answer4) {
+        case 'yes':
+            allQuestions++;
+            break;
+        case 'no':
+            noAnswers++;
+            allQuestions++;
+            break;
+    }
+    switch (answer5) {
+        case 'yes':
+            allQuestions++;
+            break;
+        case 'no':
+            noAnswers++;
+            allQuestions++;
+            break;
+    }
+    switch (answer6) {
+        case 'yes':
+            allQuestions++;
+            break;
+        case 'no':
+            noAnswers++;
+            allQuestions++;
+            break;
+    }
+    switch (answer7) {
+        case 'yes':
+            allQuestions++;
+            break;
+        case 'no':
+            noAnswers++;
+            allQuestions++;
+            break;
+    }
+    if (allQuestions === 7) {
+        if (noAnswers === 7) {
+          setMessage('You have been cleared and will be allowed');
+          console.log(message);
+        }else {   
+			    setMessage(' I am sorry due to your answers we cannot allow you into the building' );
+          console.log(message);   
+        }
+
+    } else {
+        setMessage('Please answer all questions');
+        console.log(message);
+    }
+  }
+
+//export default Review;
  
+    //renders a form with 7 questions and radio buttons to answer COVID-19 Questionare Submit save the data to the database
     return(
         <div className="container">
         <div className="title">COVID-19 Questionare</div>
-        {console.log("data: ", data)}
+{
+  page &&
       <div>
        <h1>List of Questions</h1>
      <ul>
@@ -226,29 +333,27 @@ function Question (props) {
               
           </div>
           <div className="form-actions">
-          <button type="button"  onClick={() => submitQuestions()} >Submit</button>
+          <button type="button"  onClick={() => submitAnswers()}>Submit</button>
+          
+          
           </div>
         </form>
-       
-
-   
-      </ol>
-    
-  }
-    
-    
-     
+      </ol> 
+  }  
    </ul>
   
        </div>
-       
+}
+{
+  review && 
+    <p>{message}</p>
+} 
+
+
        </div> 
         
     );
 }
 
-export default Question;
 
-/*{data.questions[currentquestion].id === numberOfQuestions ?(
-  <Redirect to="/review" component={Review}/>
-): null}*/
+export default Question;
