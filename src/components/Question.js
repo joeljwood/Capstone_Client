@@ -2,9 +2,15 @@
 import react, {useRef, useEffect,useState} from 'react'
 import * as Constants from '../constantsquestion'
 import axios from 'axios'
-import "../assets/style.css";
-
-function Question (props) {
+import "../assets/style.scss";
+import "../assets/typing.scss";
+import voiceimage from '../assets/voiceimage.jpg';
+import stop from '../assets/images/stop.jpg';
+import virus from '../assets/images/virus.jpg';
+import access from '../assets/images/access.jpg';
+function Question ({result}) {
+  const {id, firstName} = result;
+  
      //const search = props.location.search;
      //const params = new URLSearchParams(search);
      //const userid = params.get('id');
@@ -21,6 +27,8 @@ function Question (props) {
      //set use state for the questions and the radio buttons
      const [page, setPage] = useState(true);
      const [review, setReview] = useState(false);
+     const [dataRobot,setDataRobot] =useState({ });
+     const [dataOperator,setDataOperator] =useState({ });
      const [data,setData] = useState( { questions : []} );
      const [radio1, setRadio1] = useState('');
      const [radio2, setRadio2] = useState('');
@@ -30,6 +38,7 @@ function Question (props) {
      const [radio6, setRadio6] = useState('');
      const [radio7, setRadio7] = useState('');
      const [message, setMessage] = useState('');
+     const [pic, setPic] = useState('');
 
     //calls graphql on load and gets questions from the database
     useEffect(() => {
@@ -40,9 +49,33 @@ function Question (props) {
        query:Constants.GET_QUESTIONS_QUERY
      }
    );
+
+   const queryRobot= await axios.post(
+    Constants.GRAPHQL_API, {
+      query:Constants.GET_ROBOTS_QUERY
+    }
+  );
+  const queryOperator= await axios.post(
+    Constants.GRAPHQL_API, {
+      query:Constants.GET_Operator_QUERY
+    }
+  );
+
+  //get operator data 
+  const resultoperator=queryOperator.data.data;
+     console.log("result: ", resultoperator);
+     setDataOperator(resultoperator);
+  //get robot data 
+  const resultrobot=queryRobot.data.data;
+     console.log("result: ", resultrobot);
+     setDataRobot(resultrobot);
      //update the component state
      const result=queryResult.data.data;
     setData({ questions: result.allQuestions })
+
+
+
+    
       };
     fetchData();
     },[] )
@@ -57,13 +90,13 @@ function Question (props) {
       const answer5= a5.current.value;
       const answer6= a6.current.value;
       const answer7= a7.current.value;
-
+      const robotId=dataRobot.robot.id;
       const fetchData = async () => {
         const queryResultq1= await axios.post(
           Constants.GRAPHQL_API, {
             query: `
             mutation{
-              newAnswer(questionId: 1, userId: 1, robotId: 2, answers: "${answer1}"){
+              newAnswer(questionId: 1, userId: ${id}, robotId: ${robotId}, answers: "${answer1}"){
                 answers
               }
             }
@@ -74,7 +107,7 @@ function Question (props) {
           Constants.GRAPHQL_API, {
             query: `
             mutation{
-              newAnswer(questionId: 2, userId: 1, robotId: 2, answers: "${answer2}"){
+              newAnswer(questionId: 2, userId:  ${id}, robotId:  ${robotId}, answers: "${answer2}"){
                 answers
               }
             }
@@ -85,7 +118,7 @@ function Question (props) {
           Constants.GRAPHQL_API, {
             query: `
             mutation{
-              newAnswer(questionId: 3, userId: 1, robotId: 2, answers: "${answer3}"){
+              newAnswer(questionId: 3, userId:  ${id}, robotId: ${robotId}, answers: "${answer3}"){
                 answers
               }
             }
@@ -96,7 +129,7 @@ function Question (props) {
           Constants.GRAPHQL_API, {
             query: `
             mutation{
-              newAnswer(questionId: 4, userId: 1, robotId: 2, answers: "${answer4}"){
+              newAnswer(questionId: 4, userId:  ${id}, robotId: ${robotId}, answers: "${answer4}"){
                 answers
               }
             }
@@ -107,7 +140,7 @@ function Question (props) {
           Constants.GRAPHQL_API, {
             query: `
             mutation{
-              newAnswer(questionId: 5, userId: 1, robotId: 2, answers: "${answer5}"){
+              newAnswer(questionId: 5, userId: ${id}, robotId: ${robotId}, answers: "${answer5}"){
                 answers
               }
             }
@@ -118,7 +151,7 @@ function Question (props) {
           Constants.GRAPHQL_API, {
             query: `
             mutation{
-              newAnswer(questionId: 6, userId: 1, robotId: 2, answers: "${answer6}"){
+              newAnswer(questionId: 6, userId:  ${id}, robotId: ${robotId}, answers: "${answer6}"){
                 answers
               }
             }
@@ -129,7 +162,7 @@ function Question (props) {
           Constants.GRAPHQL_API, {
             query: `
             mutation{
-              newAnswer(questionId: 7, userId: 1, robotId: 2, answers: "${answer7}"){
+              newAnswer(questionId: 7, userId:  ${id}, robotId: ${robotId}, answers: "${answer7}"){
                 answers
               }
             }
@@ -152,7 +185,10 @@ function Question (props) {
     fetchData();
     //window.location.href = "/review";
   }
-
+  function backToQuestions(){
+    setPage(true);
+    setReview(false);
+  }
 function Review() {
 
   
@@ -234,9 +270,11 @@ function Review() {
     if (allQuestions === 7) {
         if (noAnswers === 7) {
           setMessage('You have been cleared and will be allowed');
+          setPic(access);
           console.log(message);
         }else {   
-			    setMessage(' I am sorry due to your answers we cannot allow you into the building' );
+			    setMessage(' Sorry due to your answers we cannot allow you into the building' );
+          setPic(stop);
           console.log(message);   
         }
 
@@ -250,25 +288,38 @@ function Review() {
  
     //renders a form with 7 questions and radio buttons to answer COVID-19 Questionare Submit save the data to the database
     return(
-        <div className="container">
-        <div className="title">COVID-19 Questionare</div>
+      <div className="signupSection">
+      <div className="info">
+     
+   <h2>Welcome {firstName}</h2>
+   
+  
+      <img src={voiceimage} width="400px" height="450px" alt="voiceimage.jpg"/>
+      {
+      dataOperator.operator &&
+     
+      <h2>Operator {dataOperator.operator.first_name}</h2>
+    
+      }
+      </div>
 {
   page &&
-      <div>
+      <div className="signupForm">
        <h1>List of Questions</h1>
-     <ul>
+     <ul className="noBullet">
    
    {
     data && data.questions.length > 0 &&
     <ol>
  
-      <div className='question_text'>{data.questions.allQuestions}</div>
+      <div >{data.questions.allQuestions}</div>
         <form>
           
-          <div className='answer_section'>
+          <div >
               
             <div>
                 {data.questions[0].question}<br/>
+              
                   <label>Yes:
                   <input type="radio" id="answer1" name="answer1" onChange={e => setRadio1("yes")} value={radio1} ref={a1}/>
                   </label>
@@ -332,11 +383,14 @@ function Review() {
             </div>
               
           </div>
-          <div className="form-actions">
-          <button type="button"  onClick={() => submitAnswers()}>Submit</button>
-          
-          
-          </div>
+         
+          <a href="#"  onClick={() => submitAnswers()}>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      Submit
+    </a>
         </form>
       </ol> 
   }  
@@ -345,8 +399,28 @@ function Review() {
        </div>
 }
 {
+ 
   review && 
+  <div className="signupForm">
+  <form>
+  <div className="css-typing">
+  
     <p>{message}</p>
+    </div>
+     
+    <img src={pic} width="250px" height="300px" alt="stop.jpg"/>
+    <br>
+
+    </br>
+    <a href="#"  onClick={() => backToQuestions()}>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      backToQuestions
+    </a>
+    </form>
+    </div>
 } 
 
 

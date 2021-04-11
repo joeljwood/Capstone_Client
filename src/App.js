@@ -11,7 +11,8 @@ import Users from './components/Users'
 import MainNavigation from './components/MainNavigation'
 
 function App() {
-
+  const [result, setResult] = useState({});
+  console.log("Test ==> ", result)
   return (
     <div className="App">
    <BrowserRouter>
@@ -20,9 +21,9 @@ function App() {
    <main className="main-content">
      <Switch>
        <Redirect from="/" to="/user" exact/>
-       <Route path="/question" component={Question}/>
+       <Route path="/question" component={() => <Question result={result} />}/>
        <Route path="/robot" component={Robot}/>
-       <Route path="/user" component={User}/>
+       <Route path="/user" component={() => <User setResult={setResult}/>}/>
      </Switch>
      </main>
      </React.Fragment>

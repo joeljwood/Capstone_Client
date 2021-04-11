@@ -11,17 +11,32 @@ query{
 
 export const GET_ROBOTS_QUERY=`
 query{
-    allRobots{
-      id
-      description
-      building{
-        id
-        address
-        description
-      }
-    }
+  robot(id:1){
+    id
+    description
+  }
+}
+`;
+
+export const GET_Operator_QUERY=`
+query{
+  operator(id:1){
+    first_name
+    
+  }
   }
 `;
+
+
+export const GET_Building_QUERY=`
+query{
+  building(id:1){
+    address
+  }
+  }
+`;
+
+
 
 
 

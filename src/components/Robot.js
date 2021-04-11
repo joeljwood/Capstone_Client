@@ -3,43 +3,46 @@ import react , {useEffect,useState} from 'react'
 import axios from 'axios'
 import * as Constants from '../constantsquestion'
 
-function Robot (props) {
+function Robot ({setRobot}) {
 
-     const [data,setData] =useState( { robots: [] } );
-
+    
+  const [data,setData] =useState({ });
     useEffect(() => {
       const fetchData = async () => {
    //call graphql api
-   const queryResult= await axios.post(
+   const queryRobot= await axios.post(
      Constants.GRAPHQL_API, {
        query:Constants.GET_ROBOTS_QUERY
      }
    )
      //update the component state
   
-  
-     const result=queryResult.data.data;
-     console.log("result: ", result);
-     setData({ robots: result.allRobots })
+
+     const resultrobot=queryRobot.data.data;
+     console.log("result: ", resultrobot);
+     setData(resultrobot);
+     
       };
-    fetchData();
-    }, [])
-  
+      fetchData();
+    },[])
+   
     return(
 
        <div>
+       {
+         data.robot &&
       <div>
        <h1>List of robots</h1>
-     {console.log("data: ", data)}
+    
      <ul>
-     {data && data.robots.map(item => (
+    
 
-       <li key={item.id}>
-        {item.description}
-       </li>
-     ))}
+      
+       <li>{data.robot.id}</li>
+     
      </ul>
        </div>
+      }
        </div> 
     );
 }

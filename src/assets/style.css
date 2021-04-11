@@ -96,21 +96,3 @@
   outline: none;
   cursor: pointer;
 }
-.form-actions button {
-  background: orangered;
-  font:inherit;
-  border: 1px solid orangered;
-  border-radius: 3px;
-  padding: 0.5rem 1 rem;
-  margin-right:  1rem ;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.26) ;
-  color: white;
-  cursor:pointer;
-}
-
-.form-actions button:hover,
-.form-actions button:active{
-  background: tomato;
-  border-color: red;
-  color: black;
-}

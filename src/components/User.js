@@ -2,13 +2,17 @@
 import react , {useRef,useEffect,useState} from 'react'
 import * as Constants from '../constantsquestion'
 import axios from 'axios'
-import "../assets/UserForm.css";
+import "../assets/UserForm.scss";
+import "../assets/radio.scss";
+import voiceimage from '../assets/voiceimage.jpg';
 import React from 'react';
+import { useHistory } from 'react-router';
 //import {NavLink} from 'react-router-dom'
 
-function User (props) {
-   
-      
+function User ({setResult}) {
+      const history = useHistory();
+      const [dataOperator,setDataOperator] =useState({ });
+      const [dataBuilding,setDataBuilding] =useState({ });
        const firstnameEl = useRef(null);
        const lastnameEl =useRef(null);
        const emailEl =useRef(null);
@@ -17,8 +21,37 @@ function User (props) {
        const addressEl =useRef(null);
    
 
+       useEffect(() => {
+        const fetchData = async () => {
+          const queryOperator= await axios.post(
+            Constants.GRAPHQL_API, {
+              query:Constants.GET_Operator_QUERY
+            }
+          );
+
+          
+            const queryBuilding= await axios.post(
+              Constants.GRAPHQL_API, {
+                query:Constants.GET_Building_QUERY
+              }
+            );
+        
+          //get operator data 
+          const resultoperator=queryOperator.data.data;
+             console.log("result: ", resultoperator);
+             setDataOperator(resultoperator);
+             //get building data
+             const resultbuilding=queryBuilding.data.data;
+             console.log("result: ", resultbuilding);
+             setDataBuilding(resultbuilding);
+            
+        }
+          fetchData();
+        },[] )
+
+
   function submitHandler(){
-    console.log("result: ", "calling the server 1");
+    
       const firstname= firstnameEl.current.value;
       const lastname= lastnameEl.current.value;
       const email= emailEl.current.value;
@@ -28,7 +61,10 @@ function User (props) {
        const phonenumber = parseInt(phone);
       
        const fetchData = async () => {
-        
+
+       
+
+
       const queryResult= await axios.post(
        
         Constants.GRAPHQL_API,{
@@ -48,51 +84,120 @@ function User (props) {
       );
       const userresult=queryResult.data.data;
       //pass this id through props maybe?
-     console.log("result: ", userresult);
+      setResult(userresult.registerUser);
      
+    
+     
+      // props=userresult.registerUser;
+      // console.log("result: ", props);
+      history.push('/question');
     }
     fetchData();
-    window.location.href = "/question?";
+    //window.location.href = "/question?";
+
    }
  
     return(
-     <form className="user-form" >
-       <div className="form-control">
-           <label htmlFor="firstname ">First Name</label>
-           <input type="text"   id="firstname" ref={firstnameEl}/>
-           </div>
-           <div className="form-control">
-           <label htmlFor="lastname ">Last Name</label>
-           <input type="text"   id="lastname" ref={lastnameEl}/>
-           </div>
-           <div className="form-control">
-           <label htmlFor="email ">Email</label>
-           <input type="email"   id="email" ref={emailEl}/>
-           </div>
-           <div className="form-control">
-           <label htmlFor="phone ">Phone</label>
-           <input type="text"   id="phone" ref={phoneEl}/>
-           </div>
-           <div className="form-control">
-           <label htmlFor="isInhabitanat ">Do you live here?</label>
-           <label htmlFor="isInhabitantTrue">Yes:
-           <input type="radio" id="true" name="isInhabitant" value={true} ref={isInhabitant}/>
-           </label>
-           <label htmlFor="isInhabitantFalse">No:
-           <input type="radio" id="false"   name="isInhabitant" value={false} ref={isInhabitant}/>
-           </label>
-           </div>
-           <div className="form-control">
-           <label htmlFor="address ">Address</label>
-           <input type="text"   id="address" ref={addressEl}/>
-           </div>
-       <div className="form-actions">
-       <button type="button"  onClick={() => submitHandler()} >Submit</button>
-       </div>
-       </form>
+    
+     <div className="signupSection">
+     <div className="info">
+     {
+      dataBuilding.building &&
+      
+      <h2>Address  |  {dataBuilding.building.address}</h2>
+     
+      }
+     <img src={voiceimage} width="400px" height="450px" alt="voiceimage.jpg"/>
+     {
+      dataOperator.operator &&
+      
+      <h2>Operator  |  {dataOperator.operator.first_name}</h2>
+     
+      }
+
+     
+     </div>
+      <form className="signupForm">
+      <h2>Register</h2>
+      <ul className="noBullet">
+      <li>
+      
+     
+      <label htmlFor="firstname ">Firstname :</label>
+           <input type="text"   id="firstname" name="firstname"
+            placeholder="Firstname" autoComplete="off" 
+            className="inputFields" ref={firstnameEl} required/>
+           
+    
+      </li>
+     
+      <li>
+      
+      <label htmlFor="lastname">Lastname :</label>
+           <input type="text"   id="lastname" name="lastname"
+            placeholder="Lastname" autoComplete="off" 
+            className="inputFields" ref={lastnameEl} required/>
+          
+      </li>
+      
+      <li>
+      
+      <label htmlFor="email">Email :</label>
+           <input type="text"   id="email" name="email"
+            placeholder="Email" autoComplete="off" 
+            className="inputFields" ref={emailEl} required/>
+          
+      </li>
+     
+      <li>
+      <label htmlFor="phone">Phone :</label>
+           <input type="text"   id="phone" name="phone"
+            placeholder="Phone" autoComplete="off" 
+            className="inputFields" ref={phoneEl} required/>
+          
+      </li>
+
+      <li>
+      
+      
+     
+      <ul className="list">
+      <h3> Do you live here ? </h3>
+      <ol className="list__item">
+     
+           <input type="radio" id="true" name="isInhabitant" className="radio-btn"  value={true} ref={isInhabitant}/>
+           <label htmlFor="true" className="label">Yes</label>
+           </ol>
+           <ol className="list__item">
+          
+           <input type="radio" id="false"   name="isInhabitant" className="radio-btn" value={false} ref={isInhabitant}/>
+           <label htmlFor="false" className="label">No</label>
+           </ol>
+           </ul>
+      </li>
+     
+      <li>
+      <label htmlFor="address">Address :</label>
+           <input type="text"   id="address" name="address"
+            placeholder="Address" autoComplete="off" 
+            className="inputFields" ref={addressEl} required/>
+          
+      </li>
+       </ul>
+
+
+       
+    <a href="#" onClick={()=> submitHandler()}>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      Submit
+    </a>
+     </form>
+      </div>
+     
     );
 }
-
-
 
 export default User;

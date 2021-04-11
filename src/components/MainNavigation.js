@@ -1,10 +1,11 @@
 import React from 'react'
 import {NavLink} from 'react-router-dom'
-import '../assets/MainNavigation.css'
+import '../assets/MainNavigation.css';
+import logo from '../assets/images/logoradley.png';
 const mainNavigation = props => (
      <header className="main-navigation">
          <div className="main-navigation__logo">
-             <h1> Main menu </h1>
+            <img src={logo} alt="logo" height={150} />
          </div>
          <nav className="main-navigation__items">
           <ul>
