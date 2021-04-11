@@ -10,11 +10,6 @@ import virus from '../assets/images/virus.jpg';
 import access from '../assets/images/access.jpg';
 function Question ({result}) {
   const {id, firstName} = result;
-  
-     //const search = props.location.search;
-     //const params = new URLSearchParams(search);
-     //const userid = params.get('id');
-     //console.log(userid);
 
     //create references for each answer to pass into the submit questions function
      const a1 =useRef(null);
